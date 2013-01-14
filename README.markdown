@@ -20,6 +20,7 @@ Arguments
 At least one of these arguments must be passed to GoPasswordCreator:
 
 - **all**	When this Flag is set, lower/upper-case letters, numbers, special characters and user defined characters are used to generate the password
+- **alphanum**  When this flag is set, lower/upper-case letters, numbers, and user defined characters are used to generate the password
 - **lower**	Lower-Case Letters will be included
 - **upper**	Upper-Case Letters will be included
 - **numbers**	Numbers will be included
@@ -39,13 +40,16 @@ Examples
 ========
 
 	GoPasswordCreator lower upper numbers
-This Password could contain lower-case letters, upper-case letters, and numbers.
+This generates passwords that could contain lower-case letters, upper-case letters, and numbers.
+
+	GoPasswordCreator alphanum
+This generates passwords that could contain lower-case letters, upper-case letters, and numbers.  This is  just a short hand for the previous command.
 
 	GoPasswordCreator lower own="?="
-This password could contain lower-case letters and the two characters "?" and "=".
+This generates passwords that could contain lower-case letters and the two characters "?" and "=".
 
 	GoPasswordCreator all lower=f
-This password could contain any characters except for lower-case letters.
+This generates passwords that could contain any characters except for lower-case letters.
 
 	GoPasswordCreator -length 8 -count 5 -file /home/d3xter/passwords.txt all
 5 Passwords with 8 characters per password will be written into /home/d3xter/passwords.txt
