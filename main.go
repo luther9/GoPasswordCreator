@@ -32,7 +32,7 @@ var (
         // Make sure there will always be at least one password
         passwordCount = 1
 
-	file = flag.String("file", "", "Write passwords to the named file instead of standard output")
+        file string
 )
 
 func usage() {
@@ -96,7 +96,14 @@ func main() {
                                         printError(err)
                                 }
                         } else {
-                                printError(fmt.Errorf("'-length' requires a '=' to specify the lenght passwords should be"))
+                                printError(fmt.Errorf("'-length' requires a '=' to specify the length passwords should be"))
+                        }
+                case "-file":
+                        // Need a string value
+                        if len(parsed) == 2 {
+                                file = parsed[1]
+                        } else {
+                                printError(fmt.Errorf("'-file' requires a '=' to specify the file name to write passwords to"))
                         }
                 default:
                         // All other arguments take boolean values
@@ -136,8 +143,8 @@ func main() {
 	var output *os.File
 	var fileErr error
 
-	if *file != "" {
-		if output, fileErr = os.Create(*file); fileErr != nil {
+	if file != "" {
+		if output, fileErr = os.Create(file); fileErr != nil {
 			printError(fileErr)
 			output = os.Stdout
 		}
