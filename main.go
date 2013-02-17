@@ -29,7 +29,8 @@ var (
 	specialCharacters bool
 	usersCharacters   string
 
-	passwordCount = flag.Int("count", 1, "Determine how many passwords to create")
+        // Make sure there will always be at least one password
+        passwordCount = 1
 
 	file = flag.String("file", "", "Write passwords to the named file instead of standard output")
 )
@@ -64,46 +65,60 @@ func main() {
 		// Separate the subcommand from the value
 		parsed := strings.SplitN(arg, "=", 2)
 
-		// Group arguments by the data type of their value
-		if parsed[0] == "own" {
-			// Need a string value
-			if len(parsed) == 2 {
-				usersCharacters = parsed[1]
-			} else {
-				printError(fmt.Errorf("'own' requires a '=' to specify characters"))
-			}
-		} else {
-			// All other arguments take boolean values
-			on := true
-			if len(parsed) == 2 {
-				var err error
-				on, err = strconv.ParseBool(parsed[1])
-				if err != nil {
-					printError(err)
-				}
-			}
-			switch parsed[0] {
-			case "all":
-				lowerCase = on
-				upperCase = on
-				numerals = on
-				specialCharacters = on
-			case "alphanum":
-				lowerCase = on
-				upperCase = on
-				numerals = on
-			case "lower":
-				lowerCase = on
-			case "upper":
-				upperCase = on
-			case "numbers":
-				numerals = on
-			case "special":
-				specialCharacters = on
-			default:
-				printError(fmt.Errorf("Invalid argument: %s", parsed[0]))
-			}
-		}
+                // Group arguments by the data type of their value
+                switch parsed[0] {
+                case "own":
+                        // Need a string value
+                        if len(parsed) == 2 {
+                                usersCharacters = parsed[1]
+                        } else {
+                                printError(fmt.Errorf("'own' requires a '=' to specify characters"))
+                        }
+                case "-count":
+                        // Need a string value
+                        if len(parsed) == 2 {
+                                // Fetch the int value from parsed[1]
+                                var err error
+                                passwordCount, err = strconv.Atoi(parsed[1])
+                                if err != nil {
+                                        printError(err)
+                                }
+                        } else {
+                                printError(fmt.Errorf("'-count' requires a '=' to specify number of passwords"))
+                        }
+                default:
+                        // All other arguments take boolean values
+                        on := true
+                        if len(parsed) == 2 {
+                                var err error
+                                on, err = strconv.ParseBool(parsed[1])
+                                if err != nil {
+                                        printError(err)
+                                }
+                        }
+                        switch parsed[0] {
+                        case "all":
+                                lowerCase = on
+                                upperCase = on
+                                numerals = on
+                                specialCharacters = on
+                        case "alphanum":
+                                lowerCase = on
+                                upperCase = on
+                                numerals = on
+                        case "lower":
+                                lowerCase = on
+                        case "upper":
+                                upperCase = on
+                        case "numbers":
+                                numerals = on
+                        case "special":
+                                specialCharacters = on
+                        default:
+                                printError(fmt.Errorf("Invalid argument: %s", parsed[0]))
+                        }
+                }
+
 	}
 
 	var output *os.File
@@ -124,7 +139,7 @@ func main() {
 	if err != nil {
 		printError(err)
 	} else {
-		writeErr := creator.WritePasswords(*passwordLength, *passwordCount)
+		writeErr := creator.WritePasswords(*passwordLength, passwordCount)
 
 		if writeErr != nil {
 			printError(writeErr)
