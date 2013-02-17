@@ -20,7 +20,7 @@ import (
 )
 
 var (
-	passwordLength = flag.Int("length", 8, "Length of the generated Password")
+	passwordLength = 8
 
 	// Variables that define what characters to use in the password
 	lowerCase         bool
@@ -29,9 +29,10 @@ var (
 	specialCharacters bool
 	usersCharacters   string
 
-	passwordCount = flag.Int("count", 1, "Determine how many passwords to create")
+	// Make sure there will always be at least one password
+	passwordCount = 1
 
-	file = flag.String("file", "", "Write passwords to the named file instead of standard output")
+	file string
 )
 
 func usage() {
@@ -65,14 +66,46 @@ func main() {
 		parsed := strings.SplitN(arg, "=", 2)
 
 		// Group arguments by the data type of their value
-		if parsed[0] == "own" {
+		switch parsed[0] {
+		case "own":
 			// Need a string value
 			if len(parsed) == 2 {
 				usersCharacters = parsed[1]
 			} else {
 				printError(fmt.Errorf("'own' requires a '=' to specify characters"))
 			}
-		} else {
+		case "-count":
+			// Need a int value
+			if len(parsed) == 2 {
+				// Fetch the int value from parsed[1]
+				var err error
+				passwordCount, err = strconv.Atoi(parsed[1])
+				if err != nil {
+					printError(err)
+				}
+			} else {
+				printError(fmt.Errorf("'-count' requires a '=' to specify number of passwords"))
+			}
+		case "-length":
+			// Need a int value
+			if len(parsed) == 2 {
+				// Fetch the in value from parsed[1]
+				var err error
+				passwordLength, err = strconv.Atoi(parsed[1])
+				if err != nil {
+					printError(err)
+				}
+			} else {
+				printError(fmt.Errorf("'-length' requires a '=' to specify the length passwords should be"))
+			}
+		case "-file":
+			// Need a string value
+			if len(parsed) == 2 {
+				file = parsed[1]
+			} else {
+				printError(fmt.Errorf("'-file' requires a '=' to specify the file name to write passwords to"))
+			}
+		default:
 			// All other arguments take boolean values
 			on := true
 			if len(parsed) == 2 {
@@ -104,13 +137,14 @@ func main() {
 				printError(fmt.Errorf("Invalid argument: %s", parsed[0]))
 			}
 		}
+
 	}
 
 	var output *os.File
 	var fileErr error
 
-	if *file != "" {
-		if output, fileErr = os.Create(*file); fileErr != nil {
+	if file != "" {
+		if output, fileErr = os.Create(file); fileErr != nil {
 			printError(fileErr)
 			output = os.Stdout
 		}
@@ -124,7 +158,7 @@ func main() {
 	if err != nil {
 		printError(err)
 	} else {
-		writeErr := creator.WritePasswords(*passwordLength, *passwordCount)
+		writeErr := creator.WritePasswords(passwordLength, passwordCount)
 
 		if writeErr != nil {
 			printError(writeErr)
