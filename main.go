@@ -20,7 +20,7 @@ import (
 )
 
 var (
-	passwordLength = flag.Int("length", 8, "Length of the generated Password")
+        passwordLength = 8
 
 	// Variables that define what characters to use in the password
 	lowerCase         bool
@@ -75,7 +75,7 @@ func main() {
                                 printError(fmt.Errorf("'own' requires a '=' to specify characters"))
                         }
                 case "-count":
-                        // Need a string value
+                        // Need a int value
                         if len(parsed) == 2 {
                                 // Fetch the int value from parsed[1]
                                 var err error
@@ -85,6 +85,18 @@ func main() {
                                 }
                         } else {
                                 printError(fmt.Errorf("'-count' requires a '=' to specify number of passwords"))
+                        }
+                case "-length":
+                        // Need a int value
+                        if len(parsed) == 2 {
+                                // Fetch the in value from parsed[1]
+                                var err error
+                                passwordLength, err = strconv.Atoi(parsed[1])
+                                if err != nil {
+                                        printError(err)
+                                }
+                        } else {
+                                printError(fmt.Errorf("'-length' requires a '=' to specify the lenght passwords should be"))
                         }
                 default:
                         // All other arguments take boolean values
@@ -139,7 +151,7 @@ func main() {
 	if err != nil {
 		printError(err)
 	} else {
-		writeErr := creator.WritePasswords(*passwordLength, passwordCount)
+		writeErr := creator.WritePasswords(passwordLength, passwordCount)
 
 		if writeErr != nil {
 			printError(writeErr)
