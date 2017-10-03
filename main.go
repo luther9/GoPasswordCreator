@@ -1,4 +1,7 @@
-/*Copyright (C) 2010 Andreas Sinz
+/*
+Copyright (C) 2010-2012 Andreas Sinz
+Copyright (C) 2012-2013 Luther Thompson
+Copyright (C) 2013 Adam Jimerson
 
 This file is part of GoPasswordCreator.
 
