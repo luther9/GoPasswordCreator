@@ -6,6 +6,9 @@ The user can choose which character-group will be used to generate the password.
 For example: lower case letters, numbers, and so on.
 It is also possible for the user to define his/her own set of characters which will be used to create the password.
 
+For the latest version of this program, see
+https://github.com/luther9/GoPasswordCreator.
+
 
 Compilation
 ===========
