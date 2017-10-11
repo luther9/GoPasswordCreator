@@ -1,6 +1,6 @@
 /*
 Copyright (C) 2010-2012 Andreas Sinz
-Copyright (C) 2012-2013 Luther Thompson
+Copyright (C) 2012-2013, 2017 Luther Thompson
 Copyright (C) 2013 Adam Jimerson
 
 This file is part of GoPasswordCreator.
@@ -115,7 +115,7 @@ func main() {
 		}
 	}
 
-	var output *os.File
+	output := os.Stdout
 	var fileErr error
 
 	if *file != "" {
@@ -123,8 +123,6 @@ func main() {
 			printError(fileErr)
 			output = os.Stdout
 		}
-	} else {
-		output = os.Stdout
 	}
 
 	creator, err := NewCreator(output, lowerCase, upperCase, numerals, specialCharacters, usersCharacters)
