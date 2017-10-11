@@ -1,6 +1,7 @@
 /*
 Copyright (C) 2010-2011 Andreas Sinz
 Copyright (C) 2013 Adam Jimerson
+Copyright (C) 2017 Franklin Harding
 
 This file is part of GoPasswordCreator.
 
