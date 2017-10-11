@@ -22,21 +22,6 @@ import (
 	"strings"
 )
 
-var (
-	passwordLength = flag.Int("length", 8, "Length of the generated Password")
-
-	// Variables that define what characters to use in the password
-	lowerCase         bool
-	upperCase         bool
-	numerals          bool
-	specialCharacters bool
-	usersCharacters   string
-
-	passwordCount = flag.Int("count", 1, "Determine how many passwords to create")
-
-	file = flag.String("file", "", "Write passwords to the named file instead of standard output")
-)
-
 func usage() {
 	command := os.Args[0]
 	fmt.Fprintf(os.Stderr,
@@ -76,6 +61,23 @@ func setBool(args []string, vars ...*bool) {
 }
 
 func main() {
+	var (
+		passwordLength = flag.Int("length", 8, "Length of the generated Password")
+
+		// Variables that define what characters to use in the password
+		lowerCase         bool
+		upperCase         bool
+		numerals          bool
+		specialCharacters bool
+		usersCharacters   string
+
+		passwordCount = flag.Int("count", 1,
+			"Determine how many passwords to create")
+
+		file = flag.String("file", "",
+			"Write passwords to the named file instead of standard output")
+	)
+
 	flag.Usage = usage
 	flag.Parse()
 
