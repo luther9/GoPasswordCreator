@@ -1,6 +1,7 @@
 /*
 Copyright (C) 2011 Andreas Sinz
 Copyright (C) 2013 Adam Jimerson
+Copyright (C) 2017 Luther Thompson
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License, version 2,
