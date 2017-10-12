@@ -116,9 +116,9 @@ func main() {
 	}
 
 	output := os.Stdout
-	var fileErr error
 
 	if *file != "" {
+		var fileErr error
 		if output, fileErr = os.Create(*file); fileErr != nil {
 			printError(fileErr)
 			output = os.Stdout
