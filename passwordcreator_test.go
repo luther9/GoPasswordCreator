@@ -20,12 +20,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 package main
 
 import (
-	"os"
 	"testing"
 )
 
+const testLength = 8
+
 func TestDigitsCharset(t *testing.T) {
-	c, e := NewCreator(os.Stdout, false, false, true, false, "")
+	c, e := NewCreator(testLength, false, false, true, false, "")
 
 	testDigits := "0123456789"
 	if e != nil || c.characters != testDigits {
@@ -34,7 +35,7 @@ func TestDigitsCharset(t *testing.T) {
 }
 
 func TestSomeChars(t *testing.T) {
-	c, err := NewCreator(os.Stdout, true, false, true, false, ",.-_")
+	c, err := NewCreator(testLength, true, false, true, false, ",.-_")
 
 	testCharacters := "abcdefghijklmnopqrstuvwxyz0123456789,.-_"
 
@@ -46,7 +47,7 @@ func TestSomeChars(t *testing.T) {
 func TestUniqueChars(t *testing.T) {
 	expected := "ab"
 	if c, err := NewCreator(
-		os.Stdout, false, false, false, false, "aaabbb",
+		testLength, false, false, false, false, "aaabbb",
 	); c.characters != expected || err != nil {
 		t.Errorf(
 			"Characters not distinct.\nExpected \"%s\", but got \"%s\"",

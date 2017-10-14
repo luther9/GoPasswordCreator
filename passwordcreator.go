@@ -2,6 +2,7 @@
 Copyright (C) 2010-2011 Andreas Sinz
 Copyright (C) 2013 Adam Jimerson
 Copyright (C) 2017 Franklin Harding
+Copyright (C) 2017 Luther Thompson
 
 This file is part of GoPasswordCreator.
 
@@ -18,13 +19,17 @@ import (
 	"crypto/rand"
 	"errors"
 	"math/big"
-	"os"
 	"strings"
 )
 
+// Like io.Writer, but without importing the package.
+type writer interface {
+	Write(p []byte) (n int, err error)
+}
+
 type Creator struct {
 	characters string
-	file       *os.File
+	length     int
 }
 
 const (
@@ -33,10 +38,8 @@ const (
 	special = ",.-"
 )
 
-func NewCreator(file *os.File, lowerCase, upperCase, numerals, specialCharacters bool, userCharacters string) (creator *Creator, err error) {
-	if file == nil {
-		return nil, errors.New("File is nil!")
-	}
+func NewCreator(length int, lowerCase, upperCase, numerals,
+	specialCharacters bool, userCharacters string) (creator *Creator, err error) {
 
 	characters := ""
 
@@ -75,13 +78,13 @@ func NewCreator(file *os.File, lowerCase, upperCase, numerals, specialCharacters
 		return nil, err
 	}
 
-	return &Creator{characters, file}, err
+	return &Creator{characters, length}, err
 }
 
-func (creator *Creator) CreatePassword(length int) ([]byte, error) {
-	password := make([]byte, length)
+func (creator *Creator) CreatePassword() ([]byte, error) {
+	password := make([]byte, creator.length)
 
-	for i := 0; i < length; i++ {
+	for i := 0; i < creator.length; i++ {
 		index, err := rand.Int(rand.Reader, big.NewInt(int64(len(creator.characters))))
 		if err != nil {
 			return nil, err
@@ -93,10 +96,10 @@ func (creator *Creator) CreatePassword(length int) ([]byte, error) {
 	return password, nil
 }
 
-func (creator *Creator) WritePasswords(length, count int) error {
+func (creator *Creator) WritePasswords(file writer, count int) error {
 	for i := 0; i < count; i++ {
-		if pass, err := creator.CreatePassword(length); err == nil {
-			creator.file.Write(append(pass, byte('\n')))
+		if pass, err := creator.CreatePassword(); err == nil {
+			file.Write(append(pass, byte('\n')))
 		} else {
 			return err
 		}

@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License along with thi
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -124,14 +125,18 @@ func main() {
 			output = os.Stdout
 		}
 	}
-
-	creator, err := NewCreator(output, lowerCase, upperCase, numerals, specialCharacters, usersCharacters)
 	defer output.Close()
+	if output == nil {
+		printError(errors.New("Output is nil!"))
+	}
+
+	creator, err := NewCreator(*passwordLength, lowerCase, upperCase, numerals,
+		specialCharacters, usersCharacters)
 
 	if err != nil {
 		printError(err)
 	} else {
-		writeErr := creator.WritePasswords(*passwordLength, *passwordCount)
+		writeErr := creator.WritePasswords(output, *passwordCount)
 
 		if writeErr != nil {
 			printError(writeErr)
