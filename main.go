@@ -63,7 +63,7 @@ func setBool(args []string, vars ...*bool) {
 
 func main() {
 	var (
-		passwordLength = flag.Int("length", 8, "Length of the generated Password")
+		passwordLength = flag.Int("length", 10, "Length of the generated Password")
 
 		// Variables that define what characters to use in the password
 		lowerCase         bool
